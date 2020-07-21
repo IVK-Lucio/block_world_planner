@@ -1,19 +1,16 @@
 module BlockWorldApp
-
 using Matte
-
 const title = "BLOCK WORLD"
-
 function ui()
     sidebar_layout(
         side_panel(
-        text_input("block1", "Enter block 1"; default = ""),
-        text_input("block2", "Enter block 2"; default = ""),
+        text_input("block1", "Enter block "; default = ""),
+        text_input("block2", "Enter World Element"; default = ""),
 button("bt", "set-up World!! "; color="blue", size="normal"),
 br(),
 h3("SET UP GOAL"),
-text_input("goal_block1", "Enter block 1"; default = ""),
-text_input("goal_block2", "Enter block 2"; default = ""),
+text_input("goal_block1", "Enter block"; default = ""),
+text_input("goal_block2", "Enter World Element"; default = ""),
 button("bt2", "set-up Goal!! "; color="yellow", size="normal"),
 button("bt3", "PLAN "; color="green", size="normal")
         ),
@@ -24,8 +21,12 @@ button("bt3", "PLAN "; color="green", size="normal")
             datatable_output("goal_config"),
             h2("INITIAL STATE"),
             datatable_output("current_state"),
-            h2("ACTION PLAN"),
-            datatable_output("state")
+            h2("ACTION STACK"),
+            datatable_output("state"),
+            datatable_output("state2"),
+            h2("PRECONDITION STACK"),
+            datatable_output("precon"),
+            datatable_output("precon2"),
         )
     )
 end
@@ -36,6 +37,9 @@ table=DataFrame(Blocks=[],state_Description=[])
 goal_table=DataFrame(Blocks=[],state_Description=[])
 blocks_state=DataFrame(Blocks=[],state_Description=[])
 planned_actions=DataFrame(List=[],Blank=[])
+planned_actions2=DataFrame(List=[],Blank=[])
+planned_precon=DataFrame(List=[],Blank=[])
+planned_precon2=DataFrame(List=[],Blank=[])
 ################################################
 
 
@@ -65,7 +69,7 @@ blok=""
 bk_stack=""
 for e in 1:size(table)[1]
 blok=table[!,1][e]
-push!(planned_actions,("Put $blok on Table",""))
+push!(planned_actions,("MOVE $blok on Table",""))
 end
 end
 end
@@ -76,12 +80,64 @@ function state(bt3)
     planned_actions
 end
 end
-
-
-
+################################################
+function plan_action2(bt3)
+    if bt3
+blok=""
+bk_stack=""
+for e in 1:size(table)[1]
+blok=goal_table[!,2][e]
+push!(planned_actions2,("MOVE $blok",""))
+end
+end
+end
+function state2(bt3)
+    if bt3
+    planned_actions2
+end
+end
 
 #################################################
+function precondi(bt3)
+    if bt3
+blok=""
+bk_stack=""
+for e in 1:size(table)[1]
+blok=table[!,1][e]
+push!(planned_precon,("Clear $blok",""))
+end
+end
+end
+function precon(bt3)
+    if bt3
+    planned_precon
+end
+end
+####################################################
+function precondi2(bt3)
+    if bt3
+blok=""
+bk_stack=""
+for e in 1:size(table)[1]
+blok=table[!,1][e]
+push!(planned_precon2,("onTable $blok",""))
+end
+end
+end
+function precon2(bt3)
+    if bt3
+    planned_precon2
+end
+end
+
+
+
+####################################################
+
+
+
+
+#####################################################
 end
 
 end
-
